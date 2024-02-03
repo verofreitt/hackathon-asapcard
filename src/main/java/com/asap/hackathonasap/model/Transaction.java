@@ -1,5 +1,6 @@
 package com.asap.hackathonasap.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -12,7 +13,17 @@ public class Transaction {
 	private String transactionDate;
 	private double amount;
 	
+	@Column(name = "STATUS", nullable = false)
+    private String status;
 	
+	
+	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	public String getId() {
 		return id;
 	}
@@ -36,6 +47,10 @@ public class Transaction {
 	}
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+	public void setConciliationStatus(String string) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

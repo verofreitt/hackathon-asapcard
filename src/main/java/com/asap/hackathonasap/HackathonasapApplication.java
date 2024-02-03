@@ -39,72 +39,127 @@ public class HackathonasapApplication implements CommandLineRunner {
 	}
 	
 	@Override
-	public void run(String... args) throws Exception {
-		try {
-			processInputData("input-data.csv");
-		}catch (IOException e) {
-			e.printStackTrace();
-		}		
-	}
+    public void run(String... args) throws Exception {
+        try {
+            processInputData("input-data.csv");
+            processConciliationData("conciliation-data.csv");
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	private void processInputData(String filePath) throws IOException, CsvException {
-        FileReader filereader = new FileReader(filePath); 
-		
-        CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
-        
-        CSVReader csvReader = new CSVReaderBuilder(filereader) 
-                .withCSVParser(parser) 
-                .build(); 
-        
-        List<String[]> lerTodasLinhas= csvReader.readAll();
-        
-        for (String[] row : lerTodasLinhas) { 
-            // Implement processing logic for input data
-            // Create Person, Transaction, and Installment objects
-            Person person = createOrUpdatePerson(row);
-            Transaction transaction = createTransaction(row, person.getId());
-            createInstallments(row, transaction.getId());
-        }
- 
-    }
-	
-    private Person createOrUpdatePerson(String[] row) {
-        String personId = row[2]; // Assuming Document is at index 2
-        Person existingPerson = personRepository.findById(personId).orElse(null);
+	    FileReader filereader = new FileReader(filePath);
+	    CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
+	    CSVReader csvReader = new CSVReaderBuilder(filereader)
+	            .withCSVParser(parser)
+	            .build();
+	    List<String[]> inputRows = csvReader.readAll();
 
-        if (existingPerson != null) {
-            return existingPerson;
-        } else {
-            Person newPerson = new Person();
-            newPerson.setId(personId);
-            newPerson.setName(row[3]); // Assuming Name is at index 3
-            newPerson.setAge(Integer.parseInt(row[4])); // Assuming Age is at index 4
-            return personRepository.save(newPerson);
-        }
-    }
-    
-    private Transaction createTransaction(String[] row, String personId) {
-        Transaction transaction = new Transaction();
-        transaction.setId(row[0]); // Assuming Transaction ID is at index 0
-        transaction.setPersonId(personId);
-        transaction.setTransactionDate(row[1]); // Assuming Transaction Date is at index 1
-        transaction.setAmount(Double.parseDouble(row[5])); // Assuming Amount is at index 5
-        return transactionRepository.save(transaction);
-    }
-    
-    private void createInstallments(String[] row, String transactionId) {
-        int numInstallments = Integer.parseInt(row[6]); // Assuming Num. de Parcelas is at index 6
-        double totalAmount = Double.parseDouble(row[5]); // Assuming Amount is at index 5
-        double installmentValue = totalAmount / numInstallments;
+	    for (String[] row : inputRows) {
+	        Person person = createOrUpdatePerson(row);
+	        Transaction transaction = createTransaction(row, person.getId());
+	        System.out.print(person);
+	        System.out.print(transaction);
+	        
+	        transaction.setStatus("PENDING"); 
 
-        for (int i = 1; i <= numInstallments; i++) {
-            Installment installment = new Installment();
-            installment.setId(UUID.randomUUID().toString());
-            installment.setTransactionId(transactionId);
-            installment.setInstallmentNumber(i);
-            installment.setValue(installmentValue);
-            installmentRepository.save(installment);
-        }
-    }
-	
+	        createInstallments(row, transaction.getId());
+	        
+	    }
+	}
+
+	private void processConciliationData(String filePath) throws IOException, CsvException {
+	    FileReader filereader = new FileReader(filePath);
+	    CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
+	    CSVReader csvReader = new CSVReaderBuilder(filereader)
+	            .withCSVParser(parser)
+	            .build();
+	    List<String[]> conciliationRows = csvReader.readAll();
+
+	    for (String[] row : conciliationRows) {
+	        String transactionId = row[0];
+	        String status = row[3]; 
+
+	        Transaction storedTransaction = transactionRepository.findById(transactionId).orElse(null);
+
+	        if (storedTransaction != null) {
+	            storedTransaction.setStatus(status);
+
+	            transactionRepository.save(storedTransaction);
+	        } else {
+	            System.out.println("Transaction with ID " + transactionId + " not found in the database.");
+	        }
+	    }
+	}
+
+	    private Person createOrUpdatePerson(String[] row) {
+	        String personId = row[2];
+	        Person existingPerson = personRepository.findById(personId).orElse(null);
+
+	        if (existingPerson != null) {
+	            return existingPerson;
+	        } else {
+	            Person newPerson = new Person();
+	            newPerson.setId(personId);
+	            newPerson.setName(row[3]); 
+	            newPerson.setAge(Integer.parseInt(row[4]));
+	            return personRepository.save(newPerson);
+	        }
+	    }
+
+	    private Transaction createTransaction(String[] row, String personId) {
+	        Transaction transaction = new Transaction();
+	        transaction.setId(row[0]);
+	        transaction.setPersonId(personId);
+	        transaction.setTransactionDate(row[1]);
+	        transaction.setAmount(Double.parseDouble(row[5]));
+
+	        String status = "PENDING";
+	        transaction.setStatus(status);
+
+	        if (status != null) {
+	            transactionRepository.save(transaction);
+	        } else {
+	            System.out.println("Status is null. Cannot save transaction.");
+	        }
+	        return transaction;
+	    }
+
+	    private void createInstallments(String[] row, String transactionId) {
+	        int numInstallments = Integer.parseInt(row[6]); 
+	        double totalAmount = Double.parseDouble(row[5]); 
+	        double installmentValue = totalAmount / numInstallments;
+
+	        for (int i = 1; i <= numInstallments; i++) {
+	            Installment installment = new Installment();
+	            installment.setId(UUID.randomUUID().toString());
+	            installment.setTransactionId(transactionId);
+	            installment.setInstallmentNumber(i);
+	            installment.setValue(installmentValue);
+	            installmentRepository.save(installment);
+	        }
+	    }
+
+	    private void reconcileData(String[] row) {
+	        String transactionId = row[0]; 
+	        double transactionAmountCSV = Double.parseDouble(row[1]); 
+
+	        Transaction storedTransaction = transactionRepository.findById(transactionId).orElse(null);
+
+	        if (storedTransaction != null) {
+	            double storedTransactionAmount = storedTransaction.getAmount();
+
+	            if (transactionAmountCSV == storedTransactionAmount) {
+	                storedTransaction.setConciliationStatus("CONCILIATED");
+	            } else {
+	                storedTransaction.setConciliationStatus("NOT CONCILIATED");
+	            }
+
+	            transactionRepository.save(storedTransaction);
+	        } else {
+	            System.out.println("Transaction with ID " + transactionId + " not found in the database.");
+	        }
+
+	    }
 }
