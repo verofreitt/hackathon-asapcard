@@ -11,6 +11,7 @@ public class Transaction {
 	private String personId;
 	private String transactionDate;
 	private double amount;
+	private char status;
 	
 	
 	public String getId() {
@@ -36,6 +37,12 @@ public class Transaction {
 	}
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+	public char getStatus() {
+		return status;
+	}
+	public void setStatus(char status) {
+		this.status = status;
 	}
 	
 	
