@@ -12,12 +12,10 @@ public class Transaction {
 	private String personId;
 	private String transactionDate;
 	private double amount;
-	private char status;
 	
 	@Column(name = "STATUS", nullable = false)
     private String status;
-	
-	
+
 	
 	public String getStatus() {
 		return status;
@@ -49,18 +47,11 @@ public class Transaction {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-<<<<<<< HEAD
 	public void setConciliationStatus(String string) {
 		// TODO Auto-generated method stub
 		
-=======
-	public char getStatus() {
-		return status;
-	}
-	public void setStatus(char status) {
-		this.status = status;
->>>>>>> efd6facf409055cad77ed76045c0364ed4c8580a
-	}
+
 	
+	}
 	
 }
