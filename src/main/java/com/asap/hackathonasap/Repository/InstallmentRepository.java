@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.asap.hackathonasap.model.Installment;
 
-public interface InstallmentRepository extends JpaRepository<Installment, String>{
+public interface InstallmentRepository extends JpaRepository<Installment, Long>{
 
 }
