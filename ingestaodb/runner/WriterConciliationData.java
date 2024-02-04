@@ -2,11 +2,11 @@ package com.asap.ingestaodb.runner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
 
 import com.asap.ingestaodb.MensageriaConciliacoes;
 import com.asap.ingestaodb.service.TransactionService;
+
 
 @Component
 public class WriterConciliationData implements CommandLineRunner {

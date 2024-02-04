@@ -6,10 +6,6 @@ import jakarta.persistence.Id;
 @Entity
 public class Person {
 
-	@Override
-	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", age=" + age + "]";
-	}
 	@Id
 	@Column(name = "ID")
 	private String id;//documento na terceira posicao
