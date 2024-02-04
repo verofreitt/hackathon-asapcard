@@ -75,7 +75,7 @@ C:\Users\username\Documents\workspace-spring-tool-suite-4-4.20.1.RELEASE\hackath
 ## ⛏️ Ferramentas da Aplicação <a name = "ferramentas"></a>
 
 - [MySQL](https://www.mysql.com/) - Database
-- [RabbitMQ](https://www.rabbitmq.com/) - Server Framework
+- [RabbitMQ](https://www.rabbitmq.com/) - Canal de transmissão de Mensagens
 - [SpringTools](https://spring.io/tools) - Web Framework
 - [Java](https://www.oracle.com/java/technologies/downloads/) - Programming Language
 
