@@ -27,7 +27,10 @@ public class MensagemTransacao {
 	@JsonProperty("num")
 	public int num;
 
+	@Override
 	public String toString() {
-        return this.name;
-    }
+		return "MensagemTransacao [id=" + id + ", date=" + date + ", document=" + document + ", name=" + name + ", age="
+				+ age + ", value=" + value + ", num=" + num + "]";
+	}
+
 }
