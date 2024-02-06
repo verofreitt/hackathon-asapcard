@@ -8,15 +8,31 @@
 
 [![Hackathon](https://img.shields.io/badge/hackathon-name-orange.svg)](http://hackathon.url.com)
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
 </div>
 
 ---
+# Descrição do Projeto: Funcionamento da Aplicação
 
-<p align="center"> Este repositório inclue a leitura de arquivos CSV, transformando o formato da mensagem para JSON e enviando através do cannal RabbitMQ que também é responsável por fazer a leitura destas mensagens, persistindo-as em um banco de dados no SGBD MySQL. A linguagem utilizada neste projeto foi Java, Framework Spring.
+## Ingestão e Processamento de Dados
+<p align="center"> A aplicação principal, chamada "ingestao," foi desenvolvida em Java com o framework Spring. Seu propósito é processar arquivos CSV localizados nas pastas "conciliacoes" e "transacoes." Garanta que essas pastas estejam presentes no repositório; caso contrário, crie-as com exatamente esses nomes.
+
+Após identificar e processar os arquivos CSV, a aplicação utiliza uma imagem Docker-Compose para enviar os dados para o RabbitMQ, formatados em JSON. Esse processo é gerenciado pelas lógicas implementadas nos arquivos `FileObservers.java` e `RabbitMQSender.java`. Uma vez enviados, os arquivos processados são automaticamente movidos para as pastas "transacoes_processado" e "conciliacoes_processado. Isso proporciona um histórico completo das operações realizadas, contribuindo para a integridade e rastreabilidade dos dados.
+
+Essa abordagem permite que o sistema evolua conforme a estrutura dos dados evolui, garantindo flexibilidade e robustez na gestão das informações dos clientes. Certifique-se de que a estrutura do arquivo JSON esteja alinhada com os requisitos do banco de dados para uma persistência eficiente e precisa dos dados."
+
+A monitorização contínua de novos arquivos nas pastas "transacoes" e "conciliacoes" é realizada pela aplicação `FileObservers.java`, assegurando que qualquer novo arquivo CSV seja prontamente identificado e processado.
+    <br> 
+</p>
+
+## Ingestão para o Banco de Dados
+<p align="center"> Além da ingestão e processamento de dados, o projeto inclui a aplicação "ingestoodb." Esta aplicação tem a função de receber as mensagens em formato JSON provenientes do RabbitMQ e persisti-las no banco de dados. Uma camada de mensageria está sempre atenta às mensagens do RabbitMQ, garantindo a contínua persistência dos dados no banco.
+    <br> 
+</p>
+
+## Banco de Dados 
+<p align="center"> O banco de dados, criado internamente pela aplicação "ingestoodb," é dinâmico e adaptado à estrutura do arquivo JSON recebido.
     <br> 
 </p>
 
