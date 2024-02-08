@@ -15,27 +15,37 @@
 ---
 # Descrição do Projeto: Funcionamento da Aplicação
 
+<div align="center">
+
+![alt text](image-1.png)
+
+</div>
+
 ## Ingestão e Processamento de Dados
 <p> A aplicação principal, chamada "ingestao," foi desenvolvida em Java com o framework Spring. Seu propósito é processar arquivos CSV localizados nas pastas "conciliacoes" e "transacoes." Garanta que essas pastas estejam presentes no repositório; caso contrário, crie-as com exatamente esses nomes.
 
-Após identificar e processar os arquivos CSV, a aplicação utiliza uma imagem Docker-Compose para enviar os dados para o RabbitMQ, formatados em JSON. Esse processo é gerenciado pelas lógicas implementadas nos arquivos `FileObservers.java` e `RabbitMQSender.java`. Uma vez enviados, os arquivos processados são automaticamente movidos para as pastas "transacoes_processado" e "conciliacoes_processado. Isso proporciona um histórico completo das operações realizadas, contribuindo para a integridade e rastreabilidade dos dados.
+Após identificar e processar os arquivos CSV, a aplicação manda para fila que está rodando o RabbitMQ dentro de uma imagem docker, formatados em JSON. Esse processo é gerenciado pelas lógicas implementadas nos arquivos `FileObservers.java` e `RabbitMQSender.java`. Uma vez enviados, os arquivos processados são automaticamente movidos para as pastas "transacoes_processado" e "conciliacoes_processado. Isso proporciona um histórico completo das operações realizadas, contribuindo para a integridade e rastreabilidade dos dados.
 
 Essa abordagem permite que o sistema evolua conforme a estrutura dos dados evolui, garantindo flexibilidade e robustez na gestão das informações dos clientes. Certifique-se de que a estrutura do arquivo JSON esteja alinhada com os requisitos do banco de dados para uma persistência eficiente e precisa dos dados."
 
-A monitorização contínua de novos arquivos nas pastas "transacoes" e "conciliacoes" é realizada pela aplicação `FileObservers.java`, assegurando que qualquer novo arquivo CSV seja prontamente identificado e processado.
+O monitoramento contínuo de novos arquivos nas pastas "transacoes" e "conciliacoes" é realizada pela aplicação `FileObservers.java`, assegurando que qualquer novo arquivo CSV seja prontamente identificado e processado. 
     <br> 
 </p>
 
 ## Ingestão para o Banco de Dados
-<p> Além da ingestão e processamento de dados, o projeto inclui a aplicação "ingestoodb." Esta aplicação tem a função de receber as mensagens em formato JSON provenientes do RabbitMQ e persisti-las no banco de dados. Uma camada de mensageria está sempre atenta às mensagens do RabbitMQ, garantindo a contínua persistência dos dados no banco.
+<p> Além da ingestão e processamento de dados, o projeto inclui a aplicação "ingestaodb." Esta aplicação tem a função de receber as mensagens em formato JSON provenientes do RabbitMQ e persisti-las no banco de dados. Uma camada de mensageria está sempre atenta às mensagens do RabbitMQ, garantindo a contínua persistência dos dados no banco. Tem duas threads rodando, uma para cada mensageria(uma pra conciliacoes e uma pra transacoes), rodando com schedule do java.
     <br> 
 </p>
 
 ## Banco de Dados 
-<p> O banco de dados, criado internamente pela aplicação "ingestoodb," é dinâmico e adaptado à estrutura do arquivo JSON recebido.
+<p> O banco de dados, desenvolvido internamente pela aplicação "ingestaodb," é dinâmico e adaptado à estrutura do arquivo JSON recebido. Utilizando o framework Hibernate, as entidades que compõem esse banco foram geradas a partir das classes do sistema. Essa abordagem permite uma integração harmoniosa entre a lógica da aplicação e a estrutura do banco de dados, proporcionando flexibilidade e eficiência. Além disso, a conexão entre a aplicação e o banco de dados é estabelecida por meio do Spring, utilizando Java Persistence API (JPA). Essa combinação de tecnologias não apenas facilita a manipulação de dados, mas também promove um desenvolvimento mais eficiente e sustentável, garantindo um desempenho otimizado do sistema como um todo.
     <br> 
 </p>
+<div align="center">
 
+![visual db](image.png)
+
+</div>
 ## 📝 Conteúdo
 
 - [Problema Proposto](#problema_proposto)
